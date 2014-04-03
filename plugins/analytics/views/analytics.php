@@ -42,13 +42,14 @@ svg {
 		<!-- start analytics block -->
 		<div class="big-block">
 			<h1><?php echo Kohana::lang('ui_main.analytics'); ?></h1>
-                        
                         <div id="analytic-tabs">
                             <ul>
                                 <li><a id="analytics-tab-0" class="analytics-tab" href="#all-time">All Time</a></li>
                                 <li><a id="analytics-tab-1" class="analytics-tab" href="#daily-incidents">Daily Incidents</a></li>
                                 <li><a id="analytics-tab-2" class="analytics-tab" href="#total-incidents">Total Incidents</a></li>
-                                <li><a id="analytics-tab-3" class="analytics-tab" href="#parellel-coords">Parallel Coordinates</a></li>
+                                <li><a id="analytics-tab-3" class="analytics-tab" href="#incidents-by-country">Incidents by Country</a></li>
+                                <li><a id="analytics-tab-4" class="analytics-tab" href="#parellel-coords">Parallel Coordinates</a></li>
+
                             </ul>
 
                             <div id="all-time">
@@ -65,11 +66,17 @@ svg {
                                 <div id="chart-total-incidents" style="width:800px;height:600px;"></div>
                             </div>
                             <!-- end daily-incidents block -->
-                            
+                       
+                            <div id="incidents-by-country">
+                                <div id="chart-incidents-by-country" style="width:800px;height:600px;"></div>
+                            </div>
+                            <!-- end daily-incidents block -->
+                       
                             <div id="parellel-coords">
                                 <div id="d3PCoords" style="width:800px;height:600px;"></div>
                             </div>
                             <!-- end D3-incidents block -->
+
                         </div>
                         <!-- end analytic-tabs block -->
                 </div>
