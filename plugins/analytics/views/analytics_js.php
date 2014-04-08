@@ -26,6 +26,7 @@ $( document ).ready( function (){
         $('#daily-incidents').hide();
         $('#total-incidents').hide();
         $('#parellel-coords').hide();
+        $('#incidents-by-country').hide();
     }
 
     hideCharts();
@@ -47,12 +48,29 @@ $( document ).ready( function (){
         hideCharts();
 
         $('#total-incidents').show();
-    });
-    
+    });    
+ 
     $('#analytics-tab-3').click( function(){
         hideCharts();
 
+        /**
+        * $('#incidents-by-country').text(
+        *    <?php //echo analytics::alert("This is a test!!"); ?>
+        *    );
+        */
+        $('#incidents-by-country').show(); 
+        /**
+        *$('#incidents-by-country').append(
+            <?php //anatlytics::alert(); ?>
+            );
+            */
+    });
+
+    $('#analytics-tab-4').click( function(){
+        hideCharts();
+
         $('#parellel-coords').show();
+    
     });
 
     /**
