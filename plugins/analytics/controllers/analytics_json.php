@@ -45,7 +45,7 @@ class Analytics_json_Controller extends Controller {
 
 	public function get()
 	{
-		$json_features = $this->create_filtered_piechart();
+		$json_features = $this->filter();
 		$this->render_analytics_json( $json_features );
 	}
 
@@ -142,18 +142,6 @@ class Analytics_json_Controller extends Controller {
 	}
 
 	/**
-	 * Validate filter results
-	 *
-	 * @param filter an array of filters
-	 */
-	protected function validate_filter( $filter )
-	{
-		var_dump( $filter ); 
-
-		return true; 
-	}
-
-	/**
 	 * Get filtered results
 	 */
 	public function create_filtered_piechart()
@@ -185,6 +173,132 @@ class Analytics_json_Controller extends Controller {
 
 		return $json;
 	}
+
+        public function filter(){
+            $db = new Analytics_Model;
+
+            // Parse query string
+            parse_str( ltrim( Router::$query_string, "?" ), $filters );
+
+            $chart_type = null;
+            $keyword = null;
+            $cumulative = true;
+            $date_from = null;
+            $date_to = null;
+            $category_id = null;
+            $country_id = null;
+            $chart_data = array();
+
+            if( isset( $filters[ 'chartType' ] ) AND ! empty( $filters[ 'chartType' ] ) )
+            {
+                $chart_type = $filters[ 'chartType' ];
+            }
+
+            if( isset( $filters[ 'keyword' ] ) AND ! empty( $filters['keyword'] ) )
+            {
+                $keyword = $filters[ 'keyword' ];
+            }
+
+            if( isset( $filters[ 'cumulative' ] ) AND ! empty( $filters['cumulative'] ) )
+            {
+                if( $filters[ 'cumulative' ] == "true" )
+                {
+                    $cumulative = true;
+                }
+                else
+                {
+                    $cumulative = false;
+                }
+            }
+
+            if( isset( $filters[ 'countryId' ] ) AND ! empty( $filters['countryId'] ) )
+            {
+                $country_id = $filters[ 'countryId' ];
+            }
+
+            if( isset( $filters[ 'categoryId' ] ) AND ! empty( $filters['categoryId'] ) )
+            {
+                $category_id = $filters[ 'categoryId' ];
+            }
+
+            if( isset( $filters[ 'dateFrom' ] ) AND ! empty( $filters['dateFrom'] ) )
+            {
+                $date_from = date( "Y-m-d G:i:s", strtotime( $filters[ 'dateFrom' ] ) );
+            }
+
+            if( isset( $filters[ 'dateTo' ] ) AND ! empty( $filters['dateTo'] ) )
+            {
+                $date_to = date( "Y-m-d G:i:s", strtotime( $filters[ 'dateTo' ] ) );
+            }
+
+            if( $chart_type == "pie" )
+            {
+		// query database
+		$incidents = $db->get_incidents_by_id( $keyword, $category_id, $country_id, $date_from, $date_to );
+
+		// create JSON object
+		$series = array();
+		foreach( $incidents as $incident )
+		{
+                    $data = array(
+                            'label' => $incident->category_title,
+                            'data' => (int)$incident->incident_count
+                    );
+
+                    array_push($series, $data);
+		}
+
+		return $series;
+            }
+            else
+            {
+                // for each category create a data series
+                $categories = $db->get_categories();
+                foreach( $categories as $category )
+                {
+                    if(  ! empty($category_id) AND ! in_array( $category->category_id, $category_id ) )
+                    {
+                        continue;
+                    }
+                    
+                    $incidents = $db->get_incidents( $keyword, $category->category_id, null,  false, $date_from, $date_to );
+                    $total = 0;
+
+                    // create data points
+                    $raw_data = array();
+                    foreach( $incidents as $incident )
+                    {
+
+                        if( ! empty($country_id) AND ! in_array( $incident->country_id, $country_id ) )
+                        {
+                            continue;
+                        }
+
+                        $timestamp = strtotime( $incident->incident_date ) * 1000;
+                        $count = (int)$incident->incident_count;
+                        $total += $count;
+                        
+                        $data = array(
+                            $timestamp,
+                            $cumulative ? $count : $total
+                        );
+
+                        array_push( $raw_data, $data );
+                    }
+
+                    // Create series labels
+                    $series = array(
+                        'label' => $category->category_title,
+                        'color' => $category->category_color,
+                        'data'  => $raw_data
+                    );
+
+                    array_push( $chart_data, $series );
+                }
+            }
+
+            return $chart_data;
+        }
 
     public function d3_para_coord_json()
     {
