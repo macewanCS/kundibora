@@ -76,9 +76,12 @@
 <p>The bottom line is, if you need analytics now for you deployment and don't have time to learn the nitty gritty of the Kohana platform Ushahidi uses or how to write the code that will produce the charts then take advantage of the work we've done. Why reinvent the wheel when someone is offering you one for free?</p>
 
 <h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<a name="d3i-love-d3" class="anchor" href="#d3i-love-d3"><span class="octicon octicon-link"></span></a>D3?!I love D3!</h3>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<p>If you don't already love D3, Id suggest checking out their website. We'll wait. Back? Pretty neat, eh?
+Our goal at the start of this project was to take the path of least resistance towards getting analytics working so we went with flot charts. We felt that the API for flotcharts was more forgiving to green horns. D3 was jsut too tempting though so we added a proof of concept showing that 1) out plugin can work with multiple visualization libraries and 2) what D3 can be used to show. </p>
+
+<p>We chose to use the Parallel coordinates view which is for sensing volumes of sets by visualizing the data. By narrowing down the dimensions, one can get a sense of how many incidents are for what Ushahidi category, location, and time, etc, just by looking at the volume returned.  What is here is not perfect and can use many edits, such as showing what percent of the data is selected in a column. <a href="http://syntagmatic.github.io/parallel-coordinates/">This</a> tool set was used to customize the parallel coordinates visualization you see in our plugin. </p>
       </section>
 
       <footer>
